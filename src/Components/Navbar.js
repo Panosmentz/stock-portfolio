@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,17 +7,18 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import { StateContext } from "../Context/StateContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
   appBar: {
-    background: "none",
+    background: "#143e55",
   },
   appBarWrapper: {
     width: "80%",
@@ -25,15 +26,16 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    color: "#143e55",
+    color: "#97abb6",
     fontSize: "1.5rem",
   },
   navList: {
+    padding: "0",
     display: "flex",
-    color: "#143e55",
+    color: "#97abb6",
   },
   navItems: {
-    color: "#143e55",
+    color: "#97abb6",
     width: "130px",
   },
   listItemText: {
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Navbar() {
+  const { isAuthenticated, logOut } = useContext(StateContext);
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
@@ -59,18 +62,36 @@ function Navbar() {
     setState(open);
   };
 
-  const itemsList = [
+  const itemsListUnauthenticated = [
     {
       text: "Home",
       onClick: () => history.push("/"),
     },
     {
       text: "Sign In",
-      onClick: () => history.push("/"),
+      onClick: () => history.push("/signin"),
     },
     {
       text: "Sign Up",
       onClick: () => {
+        history.push("/signup");
+      },
+    },
+  ];
+
+  const itemsListAuthenticated = [
+    {
+      text: "Home",
+      onClick: () => history.push("/"),
+    },
+    {
+      text: "Dashboard",
+      onClick: () => history.push("/dashboard"),
+    },
+    {
+      text: "Log Out",
+      onClick: () => {
+        logOut();
         history.push("/");
       },
     },
@@ -80,7 +101,7 @@ function Navbar() {
     <div className={classes.root}>
       <AppBar className={classes.appBar} elevation={0}>
         <Toolbar className={classes.appBarWrapper}>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} display="inline">
             Stock Portfolio
           </Typography>
           {isMobile ? (
@@ -101,38 +122,74 @@ function Navbar() {
                 onClose={toggleDrawer(false)}
               >
                 <div onClick={toggleDrawer(false)}>
-                  <List>
-                    {itemsList.map((item, index) => {
-                      const { text, onClick } = item;
-                      return (
-                        <ListItem button key={text} onClick={onClick}>
-                          <ListItemText primary={text} align="center" />
-                        </ListItem>
-                      );
-                    })}
-                  </List>
+                  {isAuthenticated ? (
+                    <List>
+                      {itemsListAuthenticated.map((item, index) => {
+                        const { text, onClick } = item;
+                        return (
+                          <ListItem button key={text} onClick={onClick}>
+                            <ListItemText primary={text} align="center" />
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  ) : (
+                    <List>
+                      {itemsListUnauthenticated.map((item, index) => {
+                        const { text, onClick } = item;
+                        return (
+                          <ListItem button key={text} onClick={onClick}>
+                            <ListItemText primary={text} align="center" />
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  )}
                 </div>
               </Drawer>
             </>
           ) : (
-            <List className={classes.navList}>
-              {itemsList.map((item, index) => {
-                const { text, onClick } = item;
-                return (
-                  <ListItem
-                    button
-                    key={text}
-                    onClick={onClick}
-                    className={classes.navItems}
-                  >
-                    <ListItemText
-                      classes={{ primary: classes.listItemText }}
-                      primary={text}
-                    />
-                  </ListItem>
-                );
-              })}
-            </List>
+            <>
+              {isAuthenticated ? (
+                <List className={classes.navList}>
+                  {itemsListAuthenticated.map((item, index) => {
+                    const { text, onClick } = item;
+                    return (
+                      <ListItem
+                        button
+                        key={text}
+                        onClick={onClick}
+                        className={classes.navItems}
+                      >
+                        <ListItemText
+                          classes={{ primary: classes.listItemText }}
+                          primary={text}
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              ) : (
+                <List className={classes.navList}>
+                  {itemsListUnauthenticated.map((item, index) => {
+                    const { text, onClick } = item;
+                    return (
+                      <ListItem
+                        button
+                        key={text}
+                        onClick={onClick}
+                        className={classes.navItems}
+                      >
+                        <ListItemText
+                          classes={{ primary: classes.listItemText }}
+                          primary={text}
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              )}
+            </>
           )}
         </Toolbar>
       </AppBar>
