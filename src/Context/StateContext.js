@@ -7,6 +7,8 @@ const initialState = {
   isAuthenticated: false,
   currentUser: null,
   registration: false,
+  searchResult: null,
+  stockInfo: null,
 };
 
 export const StateContext = createContext(initialState);
@@ -87,17 +89,31 @@ export const StateProvider = ({ children }) => {
     }
   }
 
-  async function search(stockInput) {
+  async function searchStocks(stockInput) {
     try {
       const res = await axios({
         url: `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stockInput}&apikey=CGHS440S984MDUP5`,
         method: "get",
       });
-      //     dispatch({
-      //       type: "STOCK_SEARCH",
-      //       payload: res.data,
-      //     });
-      console.log(res.data);
+      dispatch({
+        type: "STOCK_SEARCH",
+        payload: res.data.bestMatches,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getStockInfo(event) {
+    try {
+      const res = await axios({
+        url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${event}&apikey=CGHS440S984MDUP5`,
+        method: "get",
+      });
+      dispatch({
+        type: "GET_STOCK_INFO",
+        payload: res.data,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -109,11 +125,15 @@ export const StateProvider = ({ children }) => {
         isAuthenticated: state.isAuthenticated,
         currentUser: state.currentUser,
         registration: state.registration,
+        searchResult: state.searchResult,
+        stockInfo: state.stockInfo,
         signIn,
         signInGoogle,
         logOut,
         signUpEmailPwd,
-        search,
+        searchStocks,
+        getStockInfo,
+
         //        loadUser,
       }}
     >

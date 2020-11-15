@@ -30,6 +30,17 @@ export default (state, action) => {
         currentUser: action.payload,
         registration: true,
       };
+    case "STOCK_SEARCH":
+      return {
+        ...state,
+        searchResult: action.payload,
+      };
+    case "GET_STOCK_INFO":
+      return {
+        ...state,
+        stockInfo: action.payload,
+      };
+
     default:
       return state;
   }

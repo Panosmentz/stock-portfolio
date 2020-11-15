@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#143e55",
     color: "#fff",
     width: "100%",
-    height: "100%",
+    height: "50%",
   },
 }));
 
@@ -87,6 +87,10 @@ function Navbar() {
     {
       text: "Dashboard",
       onClick: () => history.push("/dashboard"),
+    },
+    {
+      text: "My Stocks",
+      onClick: () => history.push("/mystocks"),
     },
     {
       text: "Log Out",
