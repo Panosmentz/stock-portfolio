@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import {
   Container,
+  Grid,
   CssBaseline,
   IconButton,
   TableCell,
@@ -19,16 +20,33 @@ import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import { StateContext } from "../Context/StateContext";
 import db from "../config/firebase";
+import { auth } from "../config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(15),
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    marginTop: theme.spacing(6),
+  },
+  searchbar: {
+    minWidth: "400px",
+    marginTop: theme.spacing(6),
   },
   table: {
-    minWidth: 650,
+    flexGrow: 1,
+    maxWidth: "950px",
+    justifyContent: "center",
+  },
+  followContainer: {
+    padding: "20px",
+  },
+  button: {
+    marginTop: "20px",
+    width: "150px",
+    color: "#fff",
+    backgroundColor: "#143e55",
+    "&:hover": {
+      backgroundColor: "#0599a3",
+    },
   },
 }));
 
@@ -110,6 +128,7 @@ function Dashboard() {
     );
     db.collection("Favorites").doc("favoriteStock").collection("name").add({
       name: stockInfo["Meta Data"]["2. Symbol"],
+      user: auth.currentUser.displayName,
     });
   };
 
@@ -160,9 +179,141 @@ function Dashboard() {
 
     return (
       <div>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.root}>
+        <CssBaseline />
+        <Grid container justify="center" className={classes.root}>
+          <Grid item className={classes.searchbar}>
+            <form onSubmit={onSubmit}>
+              <TextField
+                id="filled-full-width"
+                label="Search stock"
+                style={{ margin: 8 }}
+                placeholder="IBM"
+                helperText=""
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton aria-label="search stocks" onClick={onSubmit}>
+                      <SearchIcon />
+                    </IconButton>
+                  ),
+                }}
+                value={searchInput}
+                variant="filled"
+                onChange={(e) => onChange(e)}
+              />
+            </form>
+          </Grid>
+        </Grid>
+        <Grid container justify="center" className={classes.root}>
+          <Grid item className={classes.table}>
+            <TableContainer component={Paper}>
+              <Table
+                size="small"
+                align="center"
+                aria-label="ticket search results"
+              >
+                <TableHead>
+                  <TableRow>
+                    {stockSearchColumns.map((column) => (
+                      <TableCell align="center" key={column.id}>
+                        {column.label}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {stockSearchRows.map((row) => {
+                    return (
+                      <TableRow
+                        tabIndex={-1}
+                        key={row.code}
+                        onClick={() => handleRowClick(row.symbol)}
+                        hover={true}
+                      >
+                        {stockSearchColumns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell align="center" key={column.id}>
+                              {column.format ? column.format(value) : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+
+        {rowClicked ? ( //display stock info
+          <Grid container justify="center" className={classes.root}>
+            <Grid item className={classes.table}>
+              <TableContainer component={Paper} align="center">
+                <Paper className={classes.followContainer}>
+                  <Typography>
+                    Daily Prices (open, high, low, close) and Volumes
+                  </Typography>
+                  <Button
+                    className={classes.button}
+                    onClick={handleFavorite}
+                    align="center"
+                    endIcon={<FavoriteBorderIcon />}
+                  >
+                    Follow Stock
+                  </Button>
+                </Paper>
+                <TableContainer component={Paper} align="center">
+                  <Table
+                    size="small"
+                    className={classes.table}
+                    aria-label="stock info"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        {stockInfoColumns.map((column) => (
+                          <TableCell align="center" key={column.id}>
+                            {column.label}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {stockInfoRows.map((row) => {
+                        return (
+                          <TableRow tabIndex={-1} key={row.code}>
+                            {stockInfoColumns.map((column) => {
+                              const value = row[column.id];
+                              return (
+                                <TableCell align="center" key={column.id}>
+                                  {column.format ? column.format(value) : value}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        ) : (
+          <></>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <CssBaseline />
+        <Grid container justify="center" className={classes.root}>
+          <Grid item className={classes.searchbar}>
             <form className={classes.form} onSubmit={onSubmit}>
               <TextField
                 id="filled-full-width"
@@ -186,119 +337,9 @@ function Dashboard() {
                 onChange={(e) => onChange(e)}
               />
             </form>
-          </div>
-        </Container>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="ticket search results">
-            <TableHead>
-              <TableRow>
-                {stockSearchColumns.map((column) => (
-                  <TableCell key={column.id}>{column.label}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {stockSearchRows.map((row) => {
-                return (
-                  <TableRow
-                    tabIndex={-1}
-                    key={row.code}
-                    onClick={() => handleRowClick(row.symbol)}
-                    hover={true}
-                  >
-                    {stockSearchColumns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id}>
-                          {column.format ? column.format(value) : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {rowClicked ? ( //display stock info
-          <TableContainer component={Paper}>
-            <Paper>
-              <Typography>
-                Daily Prices (open, high, low, close) and Volumes -{}
-                <Button
-                  onClick={handleFavorite}
-                  endIcon={<FavoriteBorderIcon />}
-                >
-                  Follow Stock
-                </Button>
-              </Typography>
-            </Paper>
-            <Table
-              className={classes.table}
-              size="small"
-              aria-label="stock info"
-            >
-              <TableHead>
-                <TableRow>
-                  {stockInfoColumns.map((column) => (
-                    <TableCell key={column.id}>{column.label}</TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stockInfoRows.map((row) => {
-                  return (
-                    <TableRow tabIndex={-1} key={row.code}>
-                      {stockInfoColumns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id}>
-                            {column.format ? column.format(value) : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <></>
-        )}
+          </Grid>
+        </Grid>
       </div>
-    );
-  } else {
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.root}>
-          <form className={classes.form} onSubmit={onSubmit}>
-            <TextField
-              id="filled-full-width"
-              label="Search stock"
-              style={{ margin: 8 }}
-              placeholder="IBM"
-              helperText=""
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{
-                endAdornment: (
-                  <IconButton aria-label="search stocks" onClick={onSubmit}>
-                    <SearchIcon />
-                  </IconButton>
-                ),
-              }}
-              value={searchInput}
-              variant="filled"
-              onChange={(e) => onChange(e)}
-            />
-          </form>
-        </div>
-      </Container>
     );
   }
 }

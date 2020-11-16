@@ -1,4 +1,5 @@
 import {
+  CssBaseline,
   Paper,
   Table,
   TableHead,
@@ -7,14 +8,30 @@ import {
   TableContainer,
   TableCell,
   Button,
+  Grid,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import db from "../config/firebase";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { auth } from "../config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(15),
+    display: "flex",
+  },
+  table: {
+    flexGrow: 1,
+    justifyContent: "center",
+    maxWidth: "300px",
+  },
+  button: {
+    width: "150px",
+    color: "#fff",
+    backgroundColor: "#143e55",
+    "&:hover": {
+      backgroundColor: "#f5425d",
+    },
   },
 }));
 
@@ -27,6 +44,7 @@ function MyStocks() {
     db.collection("Favorites")
       .doc("favoriteStock")
       .collection("name")
+      .where("user", "==", auth.currentUser.displayName)
       .onSnapshot((snapshot) =>
         setFavorites(snapshot.docs.map((doc) => doc.data()))
       );
@@ -34,33 +52,49 @@ function MyStocks() {
 
   const onClickUnfollow = (event) => {
     console.log(event);
+    db.collection("Favorites")
+      .doc("favoriteStock")
+      .collection("name")
+      .where("name", "==", event)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs[0].ref.delete();
+      });
   };
 
   console.log(favorites);
   return (
-    <div className={classes.root}>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Stock</TableCell>
-              <TableCell> Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {favorites.map((favorite) => (
-              <TableRow key={favorite.name}>
-                <TableCell>{favorite.name}</TableCell>
-                <TableCell align="right">
-                  <Button onClick={() => onClickUnfollow(favorite.name)}>
-                    UNFOLLOW
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <div>
+      <CssBaseline />
+      <Grid container justify="center" className={classes.root}>
+        <Grid item className={classes.table}>
+          <TableContainer component={Paper} align="center">
+            <Table aria-label="favorite stocks table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Stock</TableCell>
+                  <TableCell align="center"> Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {favorites.map((favorite) => (
+                  <TableRow key={favorite.name}>
+                    <TableCell align="center">{favorite.name}</TableCell>
+                    <TableCell align="center">
+                      <Button
+                        className={classes.button}
+                        onClick={() => onClickUnfollow(favorite.name)}
+                      >
+                        UNFOLLOW
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
     </div>
   );
 }

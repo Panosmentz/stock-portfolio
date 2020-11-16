@@ -12,6 +12,7 @@ import Drawer from "@material-ui/core/Drawer";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import { StateContext } from "../Context/StateContext";
+import { CssBaseline } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,6 +104,7 @@ function Navbar() {
 
   return (
     <div className={classes.root}>
+      <CssBaseline />
       <AppBar className={classes.appBar} elevation={0}>
         <Toolbar className={classes.appBarWrapper}>
           <Typography variant="h6" className={classes.title} display="inline">

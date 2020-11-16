@@ -7,11 +7,14 @@ import Dashboard from "./Components/Dashboard";
 import MyStocks from "./Components/MyStocks";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { StateProvider, StateContext } from "./Context/StateContext";
+import { CssBaseline } from "@material-ui/core";
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   return (
     <StateProvider>
       <div>
+        <CssBaseline />
         <Router>
           <Navbar />
 
@@ -19,8 +22,8 @@ function App() {
             <Route exact path="/" component={LandingPage} />
             <Route exact path="/signin" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/mystocks" component={MyStocks} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute exact path="/mystocks" component={MyStocks} />
           </Switch>
         </Router>
       </div>
