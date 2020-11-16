@@ -19,6 +19,7 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import { StateContext } from "../Context/StateContext";
+import { toast } from "react-toastify";
 import db from "../config/firebase";
 import { auth } from "../config/firebase";
 
@@ -46,6 +47,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#143e55",
     "&:hover": {
       backgroundColor: "#0599a3",
+    },
+  },
+  tableRow: {
+    "&&:hover": {
+      backgroundColor: "#e8f0fe",
     },
   },
 }));
@@ -122,14 +128,23 @@ function Dashboard() {
   const stockInfoRows = [];
 
   const handleFavorite = () => {
-    console.log(
-      "from Handle favorite function",
-      stockInfo["Meta Data"]["2. Symbol"]
-    );
     db.collection("Favorites").doc("favoriteStock").collection("name").add({
       name: stockInfo["Meta Data"]["2. Symbol"],
       user: auth.currentUser.displayName,
     });
+    toast.success(
+      "You are now following " + stockInfo["Meta Data"]["2. Symbol"],
+      {
+        //renders a succes Toast on succesfull API call
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      }
+    );
   };
 
   const handleRowClick = (event) => {
@@ -216,7 +231,7 @@ function Dashboard() {
                 aria-label="ticket search results"
               >
                 <TableHead>
-                  <TableRow>
+                  <TableRow hover={true} className={classes.tableRow}>
                     {stockSearchColumns.map((column) => (
                       <TableCell align="center" key={column.id}>
                         {column.label}
@@ -228,6 +243,7 @@ function Dashboard() {
                   {stockSearchRows.map((row) => {
                     return (
                       <TableRow
+                        className={classes.tableRow}
                         tabIndex={-1}
                         key={row.code}
                         onClick={() => handleRowClick(row.symbol)}
@@ -274,7 +290,7 @@ function Dashboard() {
                     aria-label="stock info"
                   >
                     <TableHead>
-                      <TableRow>
+                      <TableRow hover={true}>
                         {stockInfoColumns.map((column) => (
                           <TableCell align="center" key={column.id}>
                             {column.label}
@@ -285,7 +301,7 @@ function Dashboard() {
                     <TableBody>
                       {stockInfoRows.map((row) => {
                         return (
-                          <TableRow tabIndex={-1} key={row.code}>
+                          <TableRow hover={true} tabIndex={-1} key={row.code}>
                             {stockInfoColumns.map((column) => {
                               const value = row[column.id];
                               return (

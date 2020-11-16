@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import db from "../config/firebase";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { auth } from "../config/firebase";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,20 +39,20 @@ const useStyles = makeStyles((theme) => ({
 function MyStocks() {
   const [favorites, setFavorites] = useState([]);
   const classes = useStyles();
-  const theme = useTheme();
 
   useEffect(() => {
-    db.collection("Favorites")
-      .doc("favoriteStock")
-      .collection("name")
-      .where("user", "==", auth.currentUser.displayName)
-      .onSnapshot((snapshot) =>
-        setFavorites(snapshot.docs.map((doc) => doc.data()))
-      );
+    if (auth.currentUser != null) {
+      db.collection("Favorites")
+        .doc("favoriteStock")
+        .collection("name")
+        .where("user", "==", auth.currentUser.displayName)
+        .onSnapshot((snapshot) =>
+          setFavorites(snapshot.docs.map((doc) => doc.data()))
+        );
+    }
   }, []);
 
   const onClickUnfollow = (event) => {
-    console.log(event);
     db.collection("Favorites")
       .doc("favoriteStock")
       .collection("name")
@@ -60,9 +61,18 @@ function MyStocks() {
       .then((querySnapshot) => {
         querySnapshot.docs[0].ref.delete();
       });
+    toast.warning("You are no longer following " + event, {
+      //renders a succes Toast on succesfull API call
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
-  console.log(favorites);
   return (
     <div>
       <CssBaseline />

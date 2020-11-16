@@ -48,9 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
-  const { currentUser, isAuthenticated, signIn, signInGoogle } = useContext(
-    StateContext
-  );
+  const { signIn, signInGoogle } = useContext(StateContext);
   const classes = useStyles();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -70,12 +68,8 @@ export default function SignIn() {
     signInGoogle();
   };
 
-  if (isAuthenticated === true) {
-    console.log(
-      "This is the current user from log in component : ",
-      currentUser,
-      isAuthenticated
-    );
+  const isAuth = JSON.parse(localStorage.getItem("isAuthenticated"));
+  if (isAuth === true) {
     return <Redirect to="/dashboard" />;
   }
 

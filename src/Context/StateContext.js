@@ -1,6 +1,7 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import StateReducer from "./StateReducer";
 import { auth, provider } from "../config/firebase";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const initialState = {
@@ -39,6 +40,18 @@ export const StateProvider = ({ children }) => {
           type: "SET_USER",
           payload: result.user,
         });
+        if (result.user) {
+          toast.success("Welcome " + result.user.displayName, {
+            //renders a succes Toast on succesfull API call
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
       });
     } catch (error) {
       alert(error);
@@ -52,6 +65,18 @@ export const StateProvider = ({ children }) => {
           type: "SET_USER",
           payload: result.user,
         });
+        if (result.user) {
+          toast.success("Welcome " + result.user.displayName, {
+            //renders a succes Toast on succesfull API call
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
       });
     } catch (error) {
       alert(error);
@@ -72,6 +97,21 @@ export const StateProvider = ({ children }) => {
                   type: "SIGN_UP_EMAIL_PWD",
                   payload: userCredential.user,
                 });
+                if (userCredential.user) {
+                  toast.success(
+                    "Your account has been succesfully created. Welcome",
+                    {
+                      //renders a succes Toast on succesfull API call
+                      position: "top-right",
+                      autoClose: 3000,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: false,
+                      draggable: true,
+                      progress: undefined,
+                    }
+                  );
+                }
               });
           }
         });
@@ -84,36 +124,72 @@ export const StateProvider = ({ children }) => {
     try {
       await auth.signOut();
       dispatch({ type: "SIGN_OUT" });
+      toast.success("You have succesfully signed out.", {
+        //renders a succes Toast on succesfull API call
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
       alert(error);
     }
   }
 
   async function searchStocks(stockInput) {
+    toast.dark("Searching for stocks...", {
+      //renders a succes Toast on succesfull API call
+      position: "bottom-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    });
     try {
       const res = await axios({
         url: `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${stockInput}&apikey=CGHS440S984MDUP5`,
         method: "get",
       });
-      dispatch({
-        type: "STOCK_SEARCH",
-        payload: res.data.bestMatches,
-      });
+      console.log(res);
+      if (res.status === 200) {
+        dispatch({
+          type: "STOCK_SEARCH",
+          payload: res.data.bestMatches,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
   }
 
   async function getStockInfo(event) {
+    toast.dark("Fetching stock information...", {
+      //renders a succes Toast on succesfull API call
+      position: "bottom-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+    });
     try {
       const res = await axios({
-        url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${event}&apikey=CGHS440S984MDUP5`,
+        url: `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${event}&apikey=${process.env.REACT_APP_API_KEY}`,
         method: "get",
       });
-      dispatch({
-        type: "GET_STOCK_INFO",
-        payload: res.data,
-      });
+      if (res.status === 200) {
+        dispatch({
+          type: "GET_STOCK_INFO",
+          payload: res.data,
+        });
+        console.log(res);
+      }
     } catch (err) {
       console.log(err);
     }

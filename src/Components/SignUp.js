@@ -62,7 +62,7 @@ export default function SignUp() {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("password don't match");
+      console.log("Passwords do not match. Please try again");
     } else {
       signUpEmailPwd({ fname, lname, email, password });
     }
