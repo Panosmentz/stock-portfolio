@@ -94,6 +94,8 @@ Fix : When populating the stockInfo table, some JSON responses do not have value
 
 Fix : Duplicate entries in the database. Check if the user already has followed the stock he is trying to follow and render a notification
 
+Fix : Responsive design has issues on small devices where the width is bigger than 100% after a stock search
+
 Feature : Add email confirmation when signing up
 
 Feature : Add Forgot Password functionality
