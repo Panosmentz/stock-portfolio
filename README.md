@@ -1,70 +1,111 @@
-# Getting Started with Create React App
+### Stock Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### App set up
 
-## Available Scripts
+Prerequisites : `https://nodejs.org/en/`
 
-In the project directory, you can run:
+Open a terminal, create a new folder and CD into that folder
 
-### `npm start`
+Clone the repository : `git clone https://github.com/Panosmentz/stock-portfolio.git` or Download ZIP and extract files
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`cd stock-portfolio`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Install the dependencies:
 
-### `npm test`
+`npm install`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Setting up environment variables
 
-### `npm run build`
+On the project's root directory, create a new file called `.env.local`
+
+This is where the AlphaVantage API KEY and firebase's config settings are defined
+
+REACT_APP_API_KEY=placeholder
+
+REACT_APP_FIREBASE_API_KEY=placeholder
+
+REACT_APP_FIREBASE_AUTH_DOMAIN=placeholder
+
+REACT_APP_FIREBASE_DATABASE_URL=placeholder
+
+REACT_APP_FIREBASE_PROJECT_ID=placeholder
+
+REACT_APP_FIREBASE_STORAGE_BUCKET=placeholder
+
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=placeholder
+
+REACT_APP_FIREBASE_APP_ID=placeholder
+
+REACT_APP_FIREBASE_MEASUREMENT_ID=placeholder
+
+### Running the App
+
+Run the app:
+
+`npm start`
+
+### Building the App for deployment
+
+`npm run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Note that the environment variables need to be configured on the hosting provider.
+App is now ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Testing
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Not yet implemented.
+To be done with Jest and Enzyme.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Thought Process
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+As I was reading through the scenario and components to be implemented I knew I wanted to use React for the Front End and the technologies below :
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- login to their portfolio --> Firebase Authentication, sign up with email and password, sign in(email/pwd) and Sign In with Google
 
-## Learn More
+- search for stocks --> AlphaVantage API call
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- follow stocks they are interested in --> Firebase's Cloud Firestore
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- unfollow stocks they are no longer interested in --> Firebase's Cloud Firestore
 
-### Code Splitting
+### Tradeoffs
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Quality and Quantity.
 
-### Analyzing the Bundle Size
+Due to the limited time I had to work on this solution I have made the following decisions :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+As for quality, I am not happy with the visual representation of data pulled from the API. It is not very user friendly. Also there are some bugs in my solution.
 
-### Making a Progressive Web App
+Quantity -> I wanted to add some more features, please see below.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### To be Implemented
 
-### Advanced Configuration
+Fix : MyStocks component page reload pulls no data(favorite stocks) from the database because user.displayName is not yet accessible from firebase.auth listener(useEffect on StateContext.js)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Fix : When API limit has been exceeded, render a notification. JSON response has a Note key with a value of "The API limit has been..."
 
-### Deployment
+Fix : When populating the stockInfo table, some JSON responses do not have value, causing the App to crash.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Fix : Duplicate entries in the database. Check if the user already has followed the stock he is trying to follow and render a notification
 
-### `npm run build` fails to minify
+Feature : Add email confirmation when signing up
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Feature : Add Forgot Password functionality
+
+Feature : Add more Sign In methods(Facebook, Github, Apple, etc.)
+
+Feature : Add a Footer with contact information, privacy, etc.
+
+Feature : Receive notifications on followed stock price changes
+
+Feature : Visual representations of stock history
+
+Feature : Better UI/UX
+
+Tests : To write unit tests, path tests
