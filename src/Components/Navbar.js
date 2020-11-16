@@ -7,12 +7,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import List from "@material-ui/core/List";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Link, useHistory } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
+import { CssBaseline } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import { useHistory } from "react-router-dom";
 import { StateContext } from "../Context/StateContext";
-import { CssBaseline } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,10 +59,12 @@ function Navbar() {
   let history = useHistory();
   const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
   const [state, setState] = useState(false);
+
   const toggleDrawer = (open) => (event) => {
     setState(open);
   };
 
+  //buttons to display when user is not authenticated
   const itemsListUnauthenticated = [
     {
       text: "Home",
@@ -80,6 +82,7 @@ function Navbar() {
     },
   ];
 
+  //buttons to display when user is authenticated
   const itemsListAuthenticated = [
     {
       text: "Home",

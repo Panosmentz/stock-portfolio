@@ -3,13 +3,13 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import { Redirect, Link } from "react-router-dom";
-import { StateContext } from "../Context/StateContext";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { Redirect, Link } from "react-router-dom";
+import { StateContext } from "../Context/StateContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#143e55",
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -58,16 +58,19 @@ export default function SignIn() {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  //call signIn() from StateContext
   const onSubmit = async (e) => {
     e.preventDefault();
     signIn(email, password);
   };
 
+  //call signInGoogle() from StateContext
   const onSubmitGoogle = async (e) => {
     e.preventDefault();
     signInGoogle();
   };
 
+  //Check if user is authenticated and redirect to dashboard if true
   const isAuth = JSON.parse(localStorage.getItem("isAuthenticated"));
   if (isAuth === true) {
     return <Redirect to="/dashboard" />;

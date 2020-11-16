@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import {
-  Container,
   Grid,
   CssBaseline,
   IconButton,
@@ -18,10 +17,9 @@ import {
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
-import { StateContext } from "../Context/StateContext";
 import { toast } from "react-toastify";
-import db from "../config/firebase";
-import { auth } from "../config/firebase";
+import { StateContext } from "../Context/StateContext";
+import db, { auth } from "../config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,14 +68,14 @@ function Dashboard() {
     setFormData({ searchInput: e.target.value });
   };
 
+  //call searchStocks() from StateContext
   const onSubmit = async (e) => {
     e.preventDefault();
-    searchStocks(searchInput); //API call
+    searchStocks(searchInput);
     setSearchEntered(true);
   };
 
-  //////////////////////       stockInfo["Meta Data"]["2. Symbol"]
-
+  //set stockSearchColumns to be iterated when rendering table
   const stockSearchColumns = [
     { id: "symbol", label: "Symbol" },
     { id: "company", label: "Company" },
@@ -107,6 +105,7 @@ function Dashboard() {
     },
   ];
 
+  //set stockInfoColumns to be iterated when rendering
   const stockInfoColumns = [
     { id: "date", label: "Date" },
     { id: "open", label: "Open" },
@@ -124,9 +123,11 @@ function Dashboard() {
       label: "Volume",
     },
   ];
+
   const stockSearchRows = [];
   const stockInfoRows = [];
 
+  //save user's selection to firebase and display a success toast notification
   const handleFavorite = () => {
     db.collection("Favorites").doc("favoriteStock").collection("name").add({
       name: stockInfo["Meta Data"]["2. Symbol"],
@@ -135,7 +136,6 @@ function Dashboard() {
     toast.success(
       "You are now following " + stockInfo["Meta Data"]["2. Symbol"],
       {
-        //renders a succes Toast on succesfull API call
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -147,10 +147,15 @@ function Dashboard() {
     );
   };
 
+  //user selected a stock to fetch more information
+  //call getStockInfo() from StateContext
+  //setRowClicked renders the stockInfo component
   const handleRowClick = (event) => {
     getStockInfo(event);
     setRowClicked(true);
   };
+
+  //If user has made a stock search, populate searchResult rows
   if (searchEntered && searchResult != null) {
     for (let i = 0; i < searchResult.length; i++) {
       stockSearchRows.push({
@@ -165,10 +170,11 @@ function Dashboard() {
       });
     }
     if (rowClicked === true && stockInfo != null) {
+      //If user made an API call to fetch stockInfo data
+      //get the Time Series Daily data and push them into a new object
       let tempDataStore = [];
       let tSeries = stockInfo["Time Series (Daily)"];
-      //  stockSymbol = stockInfo["Meta Data"];
-      //  console.log(metaData["2. Symbol"]);
+
       for (let tempData in tSeries) {
         tempDataStore.push({
           date: tempData,
@@ -180,6 +186,7 @@ function Dashboard() {
         });
       }
 
+      //populate rows with the last 10 days stock information
       for (let i = 0; i < 10; i++) {
         stockInfoRows.push({
           date: tempDataStore[i].date,
@@ -193,6 +200,7 @@ function Dashboard() {
     }
 
     return (
+      //  if (rowClicked === true && stockInfo != null) render stock search component and search results component
       <div>
         <CssBaseline />
         <Grid container justify="center" className={classes.root}>
@@ -250,10 +258,9 @@ function Dashboard() {
                         hover={true}
                       >
                         {stockSearchColumns.map((column) => {
-                          const value = row[column.id];
                           return (
                             <TableCell align="center" key={column.id}>
-                              {column.format ? column.format(value) : value}
+                              {row[column.id]}
                             </TableCell>
                           );
                         })}
@@ -266,7 +273,7 @@ function Dashboard() {
           </Grid>
         </Grid>
 
-        {rowClicked ? ( //display stock info
+        {rowClicked ? ( //render stock info component if API call has been made
           <Grid container justify="center" className={classes.root}>
             <Grid item className={classes.table}>
               <TableContainer component={Paper} align="center">
@@ -303,10 +310,9 @@ function Dashboard() {
                         return (
                           <TableRow hover={true} tabIndex={-1} key={row.code}>
                             {stockInfoColumns.map((column) => {
-                              const value = row[column.id];
                               return (
                                 <TableCell align="center" key={column.id}>
-                                  {column.format ? column.format(value) : value}
+                                  {row[column.id]}
                                 </TableCell>
                               );
                             })}
@@ -320,12 +326,14 @@ function Dashboard() {
             </Grid>
           </Grid>
         ) : (
+          //if rowClick(stock info is not requested) is false, don't render anything.
           <></>
         )}
       </div>
     );
   } else {
     return (
+      //Render stock search component
       <div>
         <CssBaseline />
         <Grid container justify="center" className={classes.root}>

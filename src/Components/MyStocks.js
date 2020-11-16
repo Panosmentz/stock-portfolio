@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   CssBaseline,
   Paper,
@@ -10,11 +11,10 @@ import {
   Button,
   Grid,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import db from "../config/firebase";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { auth } from "../config/firebase";
+import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
+import db from "../config/firebase";
+import { auth } from "../config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +40,7 @@ function MyStocks() {
   const [favorites, setFavorites] = useState([]);
   const classes = useStyles();
 
+  //on App load/reload get user's favorite stocks from firebase
   useEffect(() => {
     if (auth.currentUser != null) {
       db.collection("Favorites")
@@ -52,6 +53,7 @@ function MyStocks() {
     }
   }, []);
 
+  //delete the entry in firebase and display a toast notification
   const onClickUnfollow = (event) => {
     db.collection("Favorites")
       .doc("favoriteStock")
@@ -62,7 +64,6 @@ function MyStocks() {
         querySnapshot.docs[0].ref.delete();
       });
     toast.warning("You are no longer following " + event, {
-      //renders a succes Toast on succesfull API call
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,

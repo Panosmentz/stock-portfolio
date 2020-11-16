@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import bg from "../assets/bg.jpg";
 import { Button, Collapse, CssBaseline, Grid } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import bg from "../assets/bg.jpg";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "100vh",

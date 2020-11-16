@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Link, Redirect } from "react-router-dom";
+import { toast } from "react-toastify";
 import { StateContext } from "../Context/StateContext";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#143e55",
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -59,15 +60,25 @@ export default function SignUp() {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  //call signUpEmailPwd() from StateContext and display a toast notification if passwords do not match
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("Passwords do not match. Please try again");
+      toast.error("Passwords do not match. Please try again", {
+        position: "bottom-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
     } else {
       signUpEmailPwd({ fname, lname, email, password });
     }
   };
 
+  //if the user has registered, log them in
   if (registration) {
     return <Redirect to="/" />;
   }
