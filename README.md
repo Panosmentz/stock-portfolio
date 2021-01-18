@@ -20,23 +20,23 @@ On the project's root directory, create a new file called `.env.local`
 
 This is where the AlphaVantage API KEY and firebase's config settings are defined
 
-REACT_APP_API_KEY=placeholder
+REACT_APP_API_KEY=*******
 
-REACT_APP_FIREBASE_API_KEY=placeholder
+REACT_APP_FIREBASE_API_KEY=*******
 
-REACT_APP_FIREBASE_AUTH_DOMAIN=placeholder
+REACT_APP_FIREBASE_AUTH_DOMAIN=*******
 
-REACT_APP_FIREBASE_DATABASE_URL=placeholder
+REACT_APP_FIREBASE_DATABASE_URL=*******
 
-REACT_APP_FIREBASE_PROJECT_ID=placeholder
+REACT_APP_FIREBASE_PROJECT_ID=*******
 
-REACT_APP_FIREBASE_STORAGE_BUCKET=placeholder
+REACT_APP_FIREBASE_STORAGE_BUCKET=*******
 
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=placeholder
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=*******
 
-REACT_APP_FIREBASE_APP_ID=placeholder
+REACT_APP_FIREBASE_APP_ID=*******
 
-REACT_APP_FIREBASE_MEASUREMENT_ID=placeholder
+REACT_APP_FIREBASE_MEASUREMENT_ID=*******
 
 ### Running the App
 
@@ -61,28 +61,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 Not yet implemented.
 To be done with Jest and Enzyme.
-
-### Thought Process
-
-As I was reading through the scenario and components to be implemented I knew I wanted to use React for the Front End and the technologies below :
-
-- login to their portfolio --> Firebase Authentication, sign up with email and password, sign in(email/pwd) and Sign In with Google
-
-- search for stocks --> AlphaVantage API call
-
-- follow stocks they are interested in --> Firebase's Cloud Firestore
-
-- unfollow stocks they are no longer interested in --> Firebase's Cloud Firestore
-
-### Tradeoffs
-
-Quality and Quantity.
-
-Due to the limited time I had to work on this solution I have made the following decisions :
-
-As for quality, I am not happy with the visual representation of data pulled from the API. It is not very user friendly. Also there are some bugs in my solution.
-
-Quantity -> I wanted to add some more features, please see below.
 
 ### To be Implemented
 
