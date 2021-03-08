@@ -39,7 +39,9 @@ Create a new project on Firebase and copy the config data
 On the project root folder, create a new file called .env.local
 
 Your .env.local file should look like this :
+
 REACT_APP_API_KEY = YOUR ALPHAVANTAGE API KEY
+
 REACT_APP_FIREBASE_API_KEY=loremipsum
 
 REACT_APP_FIREBASE_AUTH_DOMAIN=loremipsum
