@@ -1,66 +1,73 @@
 ### Stock Portfolio
 
-### App set up
+### Technologies
 
-Prerequisites : `https://nodejs.org/en/`
+ReactJS
 
-Open a terminal, create a new folder and CD into that folder
+MaterialUI
 
-Clone the repository : `git clone https://github.com/Panosmentz/stock-portfolio.git` or Download ZIP and extract files
+Firebase
 
-`cd stock-portfolio`
+Axios
 
-Install the dependencies:
+React-toastify
 
-`npm install`
 
-### Setting up environment variables
+### Live demo
 
-On the project's root directory, create a new file called `.env.local`
+https://happy-snyder-f3436c.netlify.app/
 
-This is where the AlphaVantage API KEY and firebase's config settings are defined
+### Project Screenshots
 
-REACT_APP_API_KEY=*******
+![LandingPage](https://github.com/Panosmentz/Projects-Screenshots/blob/master/stock%20portfolio%20screenshots/landing.PNG)
+![signin](https://github.com/Panosmentz/Projects-Screenshots/blob/master/stock%20portfolio%20screenshots/signin.PNG)
+![suclogin](https://github.com/Panosmentz/Projects-Screenshots/blob/master/stock%20portfolio%20screenshots/suclogin.PNG)
+![dashboard](https://github.com/Panosmentz/Projects-Screenshots/blob/master/stock%20portfolio%20screenshots/dashboard.PNG)
+![mystocks](https://github.com/Panosmentz/Projects-Screenshots/blob/master/stock%20portfolio%20screenshots/mystocks.PNG)
 
-REACT_APP_FIREBASE_API_KEY=*******
+### App Setup
 
-REACT_APP_FIREBASE_AUTH_DOMAIN=*******
+Clone the repository or download the .zip folder
 
-REACT_APP_FIREBASE_DATABASE_URL=*******
+Open an editor and open the folder stock-portfolio-master
 
-REACT_APP_FIREBASE_PROJECT_ID=*******
+Run `npm install` 
 
-REACT_APP_FIREBASE_STORAGE_BUCKET=*******
+**Setting up Firebase**
 
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=*******
+Create a new project on Firebase and copy the config data
 
-REACT_APP_FIREBASE_APP_ID=*******
+On the project root folder, create a new file called .env.local
 
-REACT_APP_FIREBASE_MEASUREMENT_ID=*******
+Your .env.local file should look like this :
 
-### Running the App
+REACT_APP_FIREBASE_API_KEY=loremipsum
 
-Run the app:
+REACT_APP_FIREBASE_AUTH_DOMAIN=loremipsum
 
-`npm start`
+REACT_APP_FIREBASE_DATABASE_URL=loremipsum
 
-### Building the App for deployment
+REACT_APP_FIREBASE_PROJECT_ID=loremipsum
 
-`npm run build`
+REACT_APP_FIREBASE_STORAGE_BUCKET=loremipsum
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=loremipsum
 
-The build is minified and the filenames include the hashes.\
-Note that the environment variables need to be configured on the hosting provider.
-App is now ready to be deployed!
+REACT_APP_FIREBASE_APP_ID=loremipsum
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+REACT_APP_FIREBASE_MEASUREMENT_ID=loremipsum
 
-### Testing
+Where loremipsum is the data from your Firebase project
 
-Not yet implemented.
-To be done with Jest and Enzyme.
+Run `npm start`
+
+### Deployment 
+
+Run `npm run build`
+
+Deploy the `build` folder that is generated on the project directory
+
+Set up environment values for the Firebase config data
 
 ### To be Implemented
 
@@ -88,4 +95,4 @@ Feature : Visual representations of stock history
 
 Feature : Better UI/UX
 
-Tests : To write unit tests, path tests
+Tests : unit tests, path tests
